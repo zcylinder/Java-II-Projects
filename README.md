@@ -1,0 +1,3 @@
+# Java-II-Projects
+Programs that I have written for my second Java class, which include demonstrations of
+recursion, objects and inheritance, exception handling, etc...
