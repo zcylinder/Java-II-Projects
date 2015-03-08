@@ -1,0 +1,39 @@
+//Using recursion to determine whether a string is a palindrome or not.
+
+import java.util.Scanner;
+
+public class Palindrome
+{
+  public static boolean isPalindrome (String s)
+  {
+    int left = 0; //Leftmost character in String
+    int right = s.length() - 1; //Rightmost char in String
+    
+    if (s.length() < 2) return true;   //Base case
+    
+    while (s.charAt(left) < 'A' || s.charAt(left) > 'Z')
+    {
+      s = s.substring(1); //Skips over numbers, spaces from the left
+    }
+    
+    while (s.charAt(right) < 'A' || s.charAt(right) > 'Z')
+    {
+      s = s.substring(0, s.length() - 1);
+    }
+    
+    if (s.charAt(left) != s.charAt(right)) return false;
+    else return isPalindrome (s.substring(1, s.length() - 1));
+  }
+  
+public static void main (String [] args)
+{
+  Scanner keyboard = new Scanner(System.in);
+  System.out.println("Please type a potential Palindrome: ");
+  String s = keyboard.nextLine();
+  s = s.toUpperCase();
+  
+  if (isPalindrome(s)) System.out.println("YOU GOT A PALINDROME!");
+  else System.out.println("NOT A PALINDROME\n");
+  }
+
+}
