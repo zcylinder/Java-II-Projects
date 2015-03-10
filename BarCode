@@ -1,0 +1,83 @@
+//Reads in a (valid) postal barcode or zipcode and outputs its corresponding partner
+
+public class BarCode
+{
+    private String myZipCode; //Instance variable
+    private String myBarCode; //Instance variable
+    private StringBuffer myNewZipCode; // Returned zip code created from valid barcode
+    private StringBuffer myNewBarCode; //Returned barcode created from valid zipcode
+    
+    public BarCode (String z)
+    {
+        if (isValidZipCode(z))
+        {
+            myZipCode = z;
+            myNewBarCode = encode(myZipCode);
+        }
+        else if (isValidBarCode(z))
+        {
+            myBarCode = z;
+            StringBuffer myNewZipCode = decode(myBarCode);
+        }
+        else throw new IllegalArgumentException("Illegal value: " + z);
+    }
+    
+    private boolean isValidZipCode(String s)
+    {
+        if (s.length() != 5 || s.length() !=10) return false; //length 10 for 9 digit zips + middle dash
+        
+        for (int i = 0; i < s.length(); i++)
+        {
+            if(s.charAt(5) == '-') continue;
+            if (s.charAt(i) < '0' && s.charAt(i) > '9') return false;
+        }
+        
+        return true;
+    }
+    
+    private boolean isValidBarCode(String s)
+    {
+        if (s.length() != 32 || s.length() != 52) return false; //Checks for total length
+        if (s.charAt(0) != '|' || s.charAt(s.length() - 1) != '|') return false; 
+        
+        for (int i = 0; i < s.length(); i++) //Checks for appropriate chars in barcode
+        {
+            if (s.charAt(i) != '|' || s.charAt(i) != ':') return false;
+        }
+        
+        int sum = 0; //Loop below checks to see if group of 5 bars sums up to 1-9 or 11
+        for (int i = 1; i <= s.length() - 2; i++) // Omits first and last bars, always '|'
+        {
+            int c = 0; // A '|' is multiplied by 1, a ':' by 0
+            
+            if (s.charAt(i) == '|') c = 1;
+            
+            if (i == 1 || i == 6 || i % 10 == 1 || i % 10 == 6) sum += c * 7;
+            else if (i == 2 || i == 7 || i % 10 == 2 || i % 10 == 7) sum += c * 4;
+            else if (i == 3 || i == 8 || i % 10 == 3 || i % 10 == 8) sum += c * 2;
+            else if (i == 4 || i == 9 || i % 10 == 4 || i % 10 == 9) sum += c ;
+            else 
+            {
+                if (sum < 1 && sum > 9 || sum != 11) return false; 
+                else sum = 0;  //Resets sum after checking 5 bars at a time
+            }
+        }
+        
+        return true;
+    }
+    
+    private String digitToCode (char c)
+    {
+        if (c == '0') return "||:::";
+        else if (c == '1') return ":::||" ;
+        else if (c == '2') return "::|:|" ;
+        else if (c == '3') return "::||:" ;
+        else if (c == '4') return ":|::|" ;
+        else if (c == '5') return ":|:|:" ;
+        else if (c == '6') return ":||::" ;
+        else if (c == '7') return "|:::|" ;
+        else if (c == '8') return "|::|:" ;
+        else return "|:|::" ;
+    }
+    
+    
