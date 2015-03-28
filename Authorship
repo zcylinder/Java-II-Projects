@@ -1,0 +1,59 @@
+//Inputs a file and then determines statistics for length of words in file
+//@Zack Cylinder, CSCIE10b, Unit53
+//March 23, 2015
+
+import java.util.*;
+import java.io.*;
+
+public class Authorship
+{
+	public static void main (String [] args) throws IOException
+	{
+		Scanner keyboard = new Scanner (System.in);
+		System.out.println("Name of input file: ");
+		File f = new File(keyboard.nextLine());
+		
+		int [] stats = new int[13];
+		for (int i = 0; i < stats.length; i++)
+		{
+			stats[i] = 0;
+		}
+		
+		while (! f.exists() ) 
+		{
+			System.out.println("FILE NOT FOUND. TYPE A REAL FILE PLEASE: ");
+			f = keyboard.nextLine();
+			System.out.println();
+		}
+		
+		Scanner in = new Scanner (new FileInputStream(f)); 
+		int count = 0;
+		
+		while (in.hasNext()) //Skips over punctuation
+		{
+			String s = in.next();
+			//Testing for end chars and single chars in String
+			if (s.charAt(s.length() - 1) >= ' ' || 
+				s.charAt(s.length() - 1) <= '/') s = s.substring(0, s.length() - 1);
+			if (s.length() == 1 && s.charAt(0) > ' ' && s.charAt(0) <= '/') continue;	
+			
+			if (s.length() >= 13) stats[12]++;
+			else stats[s.length() - 1]++;
+			count++;
+		}
+		
+		f.close();
+		
+		for (int i = 0; i < stats.length; i++)
+		{
+			if (i == 12) System.out.println("Proportion of " + (i+1) + "- (or more) letter words:  " +
+								"%1f" + "%\t(" + stats[i] + " words", 
+								(double) stats [i] / count);
+			else System.out.println("Proportion of " + (i+1) + "-letter words:  " +
+								"%1f" + "%\t(" + stats[i] + " words", 
+								(double) stats [i] / count);
+		}
+	}
+}
+				
+							
